@@ -1,0 +1,34 @@
+name: Daily Log
+
+on:
+  schedule:
+    - cron: '10 0 * * *' # 每天 00:10 UTC（按需调整）
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  generate-log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run daily log script
+        run: |
+          node scripts/daily-log.js
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dev_logs/*.md || true
+          if git diff --cached --quiet; then echo "No changes to commit"; else git commit -m "chore(daily-log): update"; git push; fi

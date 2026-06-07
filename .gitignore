@@ -1,0 +1,14 @@
+# Local envs and node
+.env
+node_modules/
+
+# Unity
+Library/
+Temp/
+obj/
+Build/
+Logs/
+
+# VS
+.vs/
+*.user
